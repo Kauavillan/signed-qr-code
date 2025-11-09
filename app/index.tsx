@@ -5,8 +5,9 @@ import sizes from "@/constants/sizes";
 import { Colors } from "@/constants/theme";
 import { BarcodeScanningResult, CameraView } from "expo-camera";
 import { useRouter } from "expo-router";
+import Pako from "pako";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
@@ -15,13 +16,57 @@ export default function Index() {
   const [scannedData, setScannedData] = React.useState<string | null>(null);
   const [isProcessing, setIsProcessing] = React.useState(false);
 
+  function decompressQRData(data: string): string {
+    try {
+      // Tenta identificar se é um dado comprimido (base64)
+      // Verifica se a string contém apenas caracteres válidos de base64
+      const base64Regex = /^[A-Za-z0-9+/]+=*$/;
+
+      if (!base64Regex.test(data)) {
+        // Não é base64, retorna o texto plano
+        return data;
+      }
+
+      try {
+        // Tenta decodificar de base64
+        const binaryString = atob(data);
+        const bytes = new Uint8Array(binaryString.length);
+
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        // Tenta descomprimir usando pako
+        const decompressed = Pako.inflate(bytes, { to: "string" });
+
+        // Verifica se o resultado descomprimido é um JSON válido
+        // (assumindo que os QR codes do app sempre contêm JSON)
+        JSON.parse(decompressed);
+
+        return decompressed;
+      } catch (decompressError) {
+        // Se falhar ao descomprimir, provavelmente é texto plano em base64
+        // ou apenas texto plano que coincidentemente passou no regex
+        return data;
+      }
+    } catch (error) {
+      console.error("Erro ao processar dados do QR code:", error);
+      return data;
+    }
+  }
+
   function handleQrCode(result: BarcodeScanningResult) {
     if (result.data === scannedData) return;
-    console.log("QR Code scanned:", result);
+
+    const processedData = decompressQRData(result.data);
+    console.log("QR Code scanned (raw):", result.data);
+    console.log("QR Code scanned (processed):", processedData);
+
     setIsProcessing(true);
     setScannedData(result.data);
     setTimeout(() => {
       setIsProcessing(false);
+      setScannedData(null);
     }, 10000);
   }
 
@@ -57,13 +102,7 @@ export default function Index() {
       <View style={styles.overlay} pointerEvents="none">
         <View style={styles.frame}>
           {isProcessing ? (
-            <Icon
-              provider="Feather"
-              name="loader"
-              size={50}
-              color="white"
-              style={{ opacity: 0.8 }}
-            />
+            <ActivityIndicator size={"large"} color={Colors.tint} />
           ) : (
             <>
               <Corner position="topLeft" />
