@@ -16,7 +16,7 @@ import Animated, {
 
 export type PressedStyles = "opacity" | "scale" | "none" | StyleProp<ViewStyle>;
 
-interface CustomPressableProps extends TouchableWithoutFeedbackProps {
+export interface CustomPressableProps extends TouchableWithoutFeedbackProps {
   children?: React.ReactNode;
   onPress: () => void;
   onPressIn?: () => void;

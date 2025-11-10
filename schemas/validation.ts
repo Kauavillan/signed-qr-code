@@ -1,0 +1,90 @@
+import { z } from "zod";
+
+// Schemas de campos individuais reutilizáveis
+export const emailSchema = z
+  .string()
+  .min(1, "E-mail é obrigatório")
+  .email("E-mail inválido")
+  .nonempty("Obrigatório");
+
+export const passwordSchema = z
+  .string()
+  .min(1, "Senha é obrigatória")
+  .min(8, "A senha deve ter no mínimo 8 caracteres")
+  .regex(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula")
+  .refine(
+    (value) => /[0-9]/.test(value) || /[^A-Za-z0-9]/.test(value),
+    "A senha deve conter pelo menos um número ou caractere especial"
+  );
+
+export const nameSchema = z
+  .string()
+  .min(1, "Nome é obrigatório")
+  .min(3, "O nome deve ter no mínimo 3 caracteres");
+
+export const phoneSchema = z
+  .string()
+  .min(1, "Telefone é obrigatório")
+  .regex(
+    /^\(\d{2}\) \d{4,5}-\d{4}$/,
+    "Formato de telefone inválido. Use (XX) XXXXX-XXXX"
+  );
+
+export const tokenSchema = z
+  .string()
+  .length(4, "O token deve ter exatamente 4 caracteres")
+  .regex(/^\d{4}$/, "O token deve conter apenas números");
+
+// Schemas de formulários completos
+export const loginFormSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export const signUpFormSchema = z
+  .object({
+    name: nameSchema,
+    email: emailSchema,
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  });
+
+export const emailOnlySchema = z.object({
+  email: emailSchema,
+});
+
+export const tokenOnlySchema = z.object({
+  token: tokenSchema,
+});
+
+export const userDataSchema = z
+  .object({
+    name: nameSchema,
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+  });
+
+export const resetPasswordFormSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  });
+
+// Tipos inferidos dos schemas
+export type LoginFormData = z.infer<typeof loginFormSchema>;
+export type SignUpFormData = z.infer<typeof signUpFormSchema>;
+export type EmailOnlyData = z.infer<typeof emailOnlySchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>;
+export type TokenOnlyData = z.infer<typeof tokenOnlySchema>;
+export type UserData = z.infer<typeof userDataSchema>;

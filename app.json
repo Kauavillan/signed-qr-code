@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TrueQR",
-    "slug": "TrueQR",
+    "slug": "trueqr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,12 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.kauavns.trueqr"
     },
     "web": {
       "output": "static",
@@ -49,6 +54,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "93d5ce1e-0a6c-4784-a2c3-d63c488062ee"
+      }
+    },
+    "owner": "kauavns"
   }
 }
