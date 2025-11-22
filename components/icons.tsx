@@ -4,7 +4,7 @@ import { StyleProp, TextStyle } from "react-native";
 
 type IconProvider = keyof typeof VectorIcons;
 
-interface IconProps {
+export interface IconProps {
   provider: IconProvider;
   name: string;
   size?: number;

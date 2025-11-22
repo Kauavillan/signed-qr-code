@@ -1,15 +1,18 @@
 import Button from "@/components/button";
 import ControlledTextInput from "@/components/controlled-text-input";
-import CustomPressable from "@/components/custom-pressable";
 import ScreenContainer from "@/components/screen-container";
+import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
 import InputsFormContainer from "@/components/ui/inputs-form-container";
 import { Colors } from "@/constants/theme";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUserLoginMutation } from "@/hooks/api/users/mutations";
 import { loginFormSchema, type LoginFormData } from "@/schemas/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { Alert, View } from "react-native";
 
 export default function Login() {
   const router = useRouter();
@@ -17,24 +20,37 @@ export default function Login() {
     resolver: zodResolver(loginFormSchema),
   });
 
-  function onSubmit(data: LoginFormData) {
-    console.log(data);
+  const { loginWithTokens, userId } = useAuth();
+
+  useEffect(() => {
+    if (userId) router.replace("/issuer/qr-codes");
+  }, [userId]);
+
+  const { mutateAsync: login, isPending } = useUserLoginMutation({
+    onError: (e) => Alert.alert("Erro ao fazer login", e.message),
+  });
+
+  async function onSubmit(data: LoginFormData) {
+    try {
+      console.log("Submitting login with data:", data);
+      const token = await login(data);
+      await loginWithTokens(token.token);
+      router.push("/issuer/qr-codes");
+    } catch (e: any) {
+      console.log("Login error", e);
+    }
   }
+
   return (
     <ScreenContainer includeSafeArea>
       <InputsFormContainer>
-        <Text>Login Page</Text>
-        <CustomPressable onPress={() => router.push("/generate-codes")}>
-          <View>
-            <Text>Gerar qr code</Text>
-          </View>
-        </CustomPressable>
+        <ThemedText>Login Page</ThemedText>
         <InputsContainer>
           <ControlledTextInput
             control={control}
-            type="email"
-            name="email"
-            placeholder="E-mail"
+            name="identifier"
+            autoCapitalize="none"
+            placeholder="E-mail ou username"
             errors={formState.errors}
           />
           <ControlledTextInput
@@ -45,19 +61,23 @@ export default function Login() {
             errors={formState.errors}
           />
 
-          <Button onPress={handleSubmit(onSubmit)} text="Login" />
+          <Button
+            onPress={handleSubmit(onSubmit)}
+            text="Login"
+            isLoading={isPending}
+          />
         </InputsContainer>
       </InputsFormContainer>
       <View>
-        <Text style={{ textAlign: "center", marginTop: 16 }}>
+        <ThemedText style={{ textAlign: "center", marginTop: 16 }}>
           Não tem uma conta?{" "}
-          <Text
+          <ThemedText
             onPress={() => router.push("/sign-up")}
             style={{ color: Colors.primary }}
           >
             Crie uma agora!
-          </Text>
-        </Text>
+          </ThemedText>
+        </ThemedText>
       </View>
     </ScreenContainer>
   );

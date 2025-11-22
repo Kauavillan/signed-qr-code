@@ -49,7 +49,8 @@
         {
           "cameraPermission": "Permita $(PRODUCT_NAME) a acessar a sua câmera para escanear códigos QR."
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

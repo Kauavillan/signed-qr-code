@@ -1,60 +1,61 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
+import { StyleSheet, Text, type TextProps } from "react-native";
 
-import { useThemeColor } from '@/hooks/use-theme-color';
+import { Colors } from "@/constants/theme";
 
 export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  color?: string;
+  type?:
+    | "default"
+    | "title"
+    | "defaultSemiBold"
+    | "subtitle"
+    | "small"
+    | "link";
 };
 
 export function ThemedText({
+  children,
   style,
-  lightColor,
-  darkColor,
-  type = 'default',
+  color = Colors.text,
+  type = "default",
   ...rest
 }: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
-
   return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
-    />
+    <Text style={[{ color }, styles[type], style]} {...rest}>
+      {children}
+    </Text>
   );
 }
 
 const styles = StyleSheet.create({
+  small: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontFamily: "Inter_400Regular",
+  },
   default: {
     fontSize: 16,
     lineHeight: 24,
+    fontFamily: "Inter_400Regular",
   },
   defaultSemiBold: {
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: '600',
+    fontFamily: "Inter_600SemiBold",
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
     lineHeight: 32,
+    fontFamily: "Inter_700Bold",
   },
   subtitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: "Inter_600SemiBold",
   },
   link: {
     lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
+    color: Colors.primary,
+    fontFamily: "Inter_500Medium",
   },
 });

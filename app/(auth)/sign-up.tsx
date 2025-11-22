@@ -1,41 +1,45 @@
 import Button from "@/components/button";
 import ControlledTextInput from "@/components/controlled-text-input";
 import ScreenContainer from "@/components/screen-container";
+import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
 import InputsFormContainer from "@/components/ui/inputs-form-container";
 import { Colors } from "@/constants/theme";
-import { EmailOnlyData, emailOnlySchema } from "@/schemas/validation";
+import { useCreateUserMutation } from "@/hooks/api/users/mutations";
+import { SignUpFormData, signUpFormSchema } from "@/schemas/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 
 export default function SignUp() {
   const router = useRouter();
-  const multiStepRef = useRef(null);
-  const { control, handleSubmit, formState } = useForm<EmailOnlyData>({
-    resolver: zodResolver(emailOnlySchema),
+
+  const { control, handleSubmit, formState } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpFormSchema),
   });
 
-  function emailSubmitted(data: EmailOnlyData) {
-    router.push({
-      pathname: "/register",
-      params: { email: data.email },
-    });
+  const { mutateAsync: createUser, isPending } = useCreateUserMutation({
+    onSuccess() {
+      router.replace("/confirm-account-creation");
+    },
+    onError: console.error,
+  });
+
+  function dataSubmitted(data: SignUpFormData) {
+    const { confirmPassword, ...dataToSubmit } = data;
+    createUser(dataToSubmit);
   }
 
   return (
     <ScreenContainer>
       <InputsFormContainer>
-        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
+        <ThemedText
+          style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}
+        >
           Criar Conta
-        </Text>
+        </ThemedText>
         <InputsContainer>
-          <Text>
-            Vamos precisar de algumas informações para criar sua conta.{"\n\n"}
-            Inicie com seu e-mail
-          </Text>
           <ControlledTextInput
             control={control}
             type="email"
@@ -43,30 +47,46 @@ export default function SignUp() {
             placeholder="E-mail"
             errors={formState.errors}
           />
+          <ControlledTextInput
+            control={control}
+            name="username"
+            placeholder="Nome de usuário"
+            errors={formState.errors}
+          />
+          <ThemedText type="small">O nome deve ser único</ThemedText>
+          <ControlledTextInput
+            control={control}
+            type="password"
+            name="password"
+            placeholder="Senha"
+            errors={formState.errors}
+          />
+          <ControlledTextInput
+            control={control}
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirmação de senha"
+            errors={formState.errors}
+          />
 
-          <Button onPress={handleSubmit(emailSubmitted)} text="Criar conta" />
+          <Button
+            onPress={handleSubmit(dataSubmitted)}
+            text="Criar conta"
+            isLoading={isPending}
+          />
         </InputsContainer>
       </InputsFormContainer>
       <View>
-        <Text style={{ textAlign: "center", marginTop: 16 }}>
+        <ThemedText style={{ textAlign: "center", marginTop: 16 }}>
           Já tem uma conta?{" "}
-          <Text
+          <ThemedText
             onPress={() => router.push("/login")}
             style={{ color: Colors.primary }}
           >
             Faça o login!
-          </Text>
-        </Text>
+          </ThemedText>
+        </ThemedText>
       </View>
     </ScreenContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  formBackground: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 20,
-    width: "100%",
-  },
-});

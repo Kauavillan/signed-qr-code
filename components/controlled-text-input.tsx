@@ -45,6 +45,7 @@ export default function ControlledTextInput<T extends FieldValues>({
               secureTextEntry={type === "password" && !showPassword}
               autoCapitalize={type === "text" ? "sentences" : "none"}
               placeholder={placeholder}
+              placeholderTextColor={Colors.text}
               style={[
                 styles.input,
                 isFocused && styles.inputFocused,
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: 40,
+    color: Colors.text,
     width: "100%",
     borderRadius: 8,
     backgroundColor: Colors.background,
