@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import type { QrCodeItem } from "@/hooks/api/qr-codes/queries";
 import { useInfiniteUserQrCodes } from "@/hooks/api/qr-codes/queries";
 import { saveOrSharePdf } from "@/utils/file-save";
-import { buildQrPdfHtml } from "@/utils/pdf";
+import { buildQrPdfHtml, getLogoAsBase64 } from "@/utils/pdf";
 import { qrToDataURL } from "@/utils/qr";
 import * as Print from "expo-print";
 import { useRouter } from "expo-router";
@@ -23,7 +23,6 @@ import QRCode from "react-native-qrcode-svg";
 export default function QrCodesList() {
   const { userId } = useAuth();
   const router = useRouter();
-  console.log("QrCodesList - userId:", userId);
   const qrRefs = useRef<Record<string, QRCode | null>>({});
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const {
@@ -52,9 +51,10 @@ export default function QrCodesList() {
       const ref = qrRefs.current[item.id];
       if (!ref) throw new Error("QR code não está pronto.");
       const dataUrl = await qrToDataURL(ref);
-      const html = buildQrPdfHtml(item, dataUrl);
+      const logoDataUrl = await getLogoAsBase64();
+      const html = buildQrPdfHtml(item, dataUrl, logoDataUrl);
       const { uri } = await Print.printToFileAsync({ html });
-      const safeIssuer = (item.issuerName || "QRCode").replace(
+      const safeIssuer = (item.username || "QRCode").replace(
         /[^a-z0-9-_]+/gi,
         "_"
       );

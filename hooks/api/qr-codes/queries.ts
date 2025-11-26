@@ -8,6 +8,7 @@ export type QrCodeItem = {
   userId: string;
   createdAt: string;
   qrCodeText: string;
+  username: string;
   issuerName: string;
 };
 

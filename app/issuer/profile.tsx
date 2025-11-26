@@ -3,6 +3,7 @@ import ScreenContainer from "@/components/screen-container";
 import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
 import InputsFormContainer from "@/components/ui/inputs-form-container";
+import Logo from "@/components/ui/logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUpdateUsernameMutation } from "@/hooks/api/users/mutations";
 import { nameSchema } from "@/schemas/validation";
@@ -46,6 +47,7 @@ export default function Profile() {
   return (
     <ScreenContainer includeSafeArea>
       <InputsFormContainer>
+        <Logo size={150} />
         <ThemedText style={{ fontWeight: "bold", fontSize: 16 }}>
           Gerenciar conta
         </ThemedText>
@@ -53,6 +55,11 @@ export default function Profile() {
         <View style={{ height: 24 }} />
 
         <InputsContainer>
+          <Button
+            colorScheme="secondary"
+            text="Voltar para o leitor de QR codes"
+            onPress={() => router.push("/")}
+          />
           <ThemedText style={{ marginBottom: 8 }}>Sessão</ThemedText>
           <Button text="Sair da conta" onPress={onSignOut} />
         </InputsContainer>

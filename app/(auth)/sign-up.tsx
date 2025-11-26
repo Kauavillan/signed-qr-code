@@ -1,9 +1,11 @@
 import Button from "@/components/button";
 import ControlledTextInput from "@/components/controlled-text-input";
+import ErrorBanner from "@/components/error-banner";
 import ScreenContainer from "@/components/screen-container";
 import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
 import InputsFormContainer from "@/components/ui/inputs-form-container";
+import Logo from "@/components/ui/logo";
 import { Colors } from "@/constants/theme";
 import { useCreateUserMutation } from "@/hooks/api/users/mutations";
 import { SignUpFormData, signUpFormSchema } from "@/schemas/validation";
@@ -19,11 +21,14 @@ export default function SignUp() {
     resolver: zodResolver(signUpFormSchema),
   });
 
-  const { mutateAsync: createUser, isPending } = useCreateUserMutation({
+  const {
+    mutateAsync: createUser,
+    isPending,
+    error,
+  } = useCreateUserMutation({
     onSuccess() {
       router.replace("/confirm-account-creation");
     },
-    onError: console.error,
   });
 
   function dataSubmitted(data: SignUpFormData) {
@@ -34,11 +39,13 @@ export default function SignUp() {
   return (
     <ScreenContainer>
       <InputsFormContainer>
+        <Logo size={200} />
         <ThemedText
-          style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}
+          style={{ fontSize: 24, fontWeight: "bold", marginVertical: 16 }}
         >
           Criar Conta
         </ThemedText>
+        <ErrorBanner error={error} />
         <InputsContainer>
           <ControlledTextInput
             control={control}

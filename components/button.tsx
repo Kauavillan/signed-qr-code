@@ -15,7 +15,7 @@ interface ButtonProps extends CustomPressableProps {
   text: string;
   isLoading?: boolean;
   width?: number | "full" | "content-only";
-  colorScheme?: "primary" | "secondary";
+  colorScheme?: "primary" | "secondary" | "red";
   icon?: IconProps;
 }
 
@@ -43,6 +43,10 @@ export default function Button({
       break;
     case "secondary":
       colors.background = Colors.secondary;
+      colors.text = "white";
+      break;
+    case "red":
+      colors.background = Colors.error;
       colors.text = "white";
       break;
   }

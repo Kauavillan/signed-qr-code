@@ -9,7 +9,7 @@ export default function IssuerLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
         tabBarActiveTintColor: Colors.tint,
       }}
     >
@@ -31,7 +31,7 @@ export default function IssuerLayout() {
         <Tabs.Screen
           name="qr-codes"
           options={{
-            title: "Meus QR Codes",
+            headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <Icon
                 provider="Ionicons"

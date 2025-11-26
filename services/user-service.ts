@@ -11,7 +11,6 @@ export default class UserService {
     return await QueryHandler(axios.post(this.endpoint, data));
   }
   async login(data: LoginInterface) {
-    console.log("Logging in with data:", data);
     return await QueryHandler(axios.post(`${this.endpoint}/login`, data));
   }
 

@@ -4,6 +4,7 @@ import ScreenContainer from "@/components/screen-container";
 import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
 import InputsFormContainer from "@/components/ui/inputs-form-container";
+import Logo from "@/components/ui/logo";
 import { Colors } from "@/constants/theme";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserLoginMutation } from "@/hooks/api/users/mutations";
@@ -44,29 +45,37 @@ export default function Login() {
   return (
     <ScreenContainer includeSafeArea>
       <InputsFormContainer>
-        <ThemedText>Login Page</ThemedText>
-        <InputsContainer>
-          <ControlledTextInput
-            control={control}
-            name="identifier"
-            autoCapitalize="none"
-            placeholder="E-mail ou username"
-            errors={formState.errors}
-          />
-          <ControlledTextInput
-            control={control}
-            name="password"
-            placeholder="Senha"
-            type="password"
-            errors={formState.errors}
-          />
+        <Logo size={200} />
+        <View>
+          <ThemedText
+            style={{ fontSize: 24, fontWeight: "bold", marginVertical: 16 }}
+          >
+            Login
+          </ThemedText>
 
-          <Button
-            onPress={handleSubmit(onSubmit)}
-            text="Login"
-            isLoading={isPending}
-          />
-        </InputsContainer>
+          <InputsContainer>
+            <ControlledTextInput
+              control={control}
+              name="identifier"
+              autoCapitalize="none"
+              placeholder="E-mail ou username"
+              errors={formState.errors}
+            />
+            <ControlledTextInput
+              control={control}
+              name="password"
+              placeholder="Senha"
+              type="password"
+              errors={formState.errors}
+            />
+
+            <Button
+              onPress={handleSubmit(onSubmit)}
+              text="Login"
+              isLoading={isPending}
+            />
+          </InputsContainer>
+        </View>
       </InputsFormContainer>
       <View>
         <ThemedText style={{ textAlign: "center", marginTop: 16 }}>

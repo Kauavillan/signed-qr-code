@@ -8,6 +8,7 @@ export const Colors = {
   background: "#F9FAFB",
   green: "#22C55D",
   error: "#C52222",
+  yellow: "#ffe44bff",
   lightGreenBackground: "#EDFCF5",
   tint: primaryColor,
   grey: "#9CA3AF",

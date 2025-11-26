@@ -3,31 +3,32 @@ import ControlledTextInput from "@/components/controlled-text-input";
 import ScreenContainer from "@/components/screen-container";
 import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
-import sizes from "@/constants/sizes";
 import { useCreateQrCode } from "@/hooks/api/qr-codes/mutations";
 import { QrCodeContentData, qrCodeContentSchema } from "@/schemas/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { ActivityIndicator } from "react-native";
-import QrCode from "react-native-qrcode-svg";
 
 export default function GenerateCodes() {
   const { control, handleSubmit, formState } = useForm<QrCodeContentData>({
     resolver: zodResolver(qrCodeContentSchema),
   });
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   const {
     mutateAsync,
     isPending,
     data: qrCodeData,
   } = useCreateQrCode({
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["qr-codes", "by-user"],
         exact: false,
-      }),
+      });
+      router.back();
+    },
   });
 
   function onSubmit(data: QrCodeContentData) {
@@ -54,13 +55,7 @@ export default function GenerateCodes() {
           onPress={handleSubmit(onSubmit)}
           isLoading={isPending}
         />
-        {isPending ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          qrCodeData && (
-            <QrCode value={qrCodeData} size={sizes.vw.globalViewWidth} />
-          )
-        )}
+        {isPending && <ActivityIndicator size="large" />}
       </InputsContainer>
     </ScreenContainer>
   );

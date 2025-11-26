@@ -1,3 +1,4 @@
+import { defaultHeaderOptions } from "@/constants/navigation";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import {
@@ -64,11 +65,12 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Stack>
+        <Stack screenOptions={defaultHeaderOptions}>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="issuer" options={{ headerShown: false }} />
           <Stack.Screen name="qr-codes" options={{ headerTitle: "QR Codes" }} />
+          <Stack.Screen name="[qrCodeId]" options={{ headerShown: false }} />
           <Stack.Screen
             name="qr-code-info"
             options={{ headerTitle: "Informações do QR Code" }}

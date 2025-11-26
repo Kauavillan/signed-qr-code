@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "TrueQR",
-    "slug": "trueqr",
+    "name": "QRypt",
+    "slug": "qrypt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "trueqr",
+    "scheme": "qrypt",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,10 +13,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#F9FAFB",
+        "foregroundImage": "./assets/images/android-adaptive-icon.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -24,11 +22,7 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.kauavns.trueqr"
-    },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "package": "com.kauavns.qrypt"
     },
     "plugins": [
       "expo-router",
@@ -36,12 +30,8 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "backgroundColor": "#F9FAFB"
         }
       ],
       [
@@ -59,7 +49,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "93d5ce1e-0a6c-4784-a2c3-d63c488062ee"
+        "projectId": "35d9ae2b-3dc2-4dda-b6d7-7f1c88723bdb"
       }
     },
     "owner": "kauavns"

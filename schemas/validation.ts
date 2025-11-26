@@ -126,6 +126,21 @@ export const resetPasswordFormSchema = z
     path: ["confirmPassword"],
   });
 
+// Campo opcional com mínimo de 5 caracteres caso seja fornecido
+export const complaintReportSchema = z.object({
+  details: z
+    .string()
+    .optional()
+    .refine(
+      (value) =>
+        !value || value.trim().length === 0 || value.trim().length >= 5,
+      {
+        message: "A descrição deve ter no mínimo 5 caracteres",
+        path: ["details"],
+      }
+    ),
+});
+
 // Tipos inferidos dos schemas
 export type LoginFormData = z.infer<typeof loginFormSchema>;
 export type SignUpFormData = z.infer<typeof signUpFormSchema>;
@@ -134,3 +149,4 @@ export type QrCodeContentData = z.infer<typeof qrCodeContentSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>;
 export type TokenOnlyData = z.infer<typeof tokenOnlySchema>;
 export type UserData = z.infer<typeof userDataSchema>;
+export type ComplaintReportFormData = z.infer<typeof complaintReportSchema>;

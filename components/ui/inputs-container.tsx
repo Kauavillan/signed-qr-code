@@ -7,7 +7,7 @@ interface InputsContainerProps {
 }
 
 export default function InputsContainer({
-  spacing = 8,
+  spacing = 16,
   children,
 }: InputsContainerProps) {
   return <View style={{ gap: spacing }}>{children}</View>;

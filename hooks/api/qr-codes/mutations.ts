@@ -7,12 +7,22 @@ export function useCreateQrCode(onAction?: ExecuteOnAction) {
   const mutation = useMutation({
     mutationFn: async (content: string) => {
       const user = await getUserFromStorage();
-      console.log("Creating QR code for user:", user);
       if (!user?.id) return null;
       return await new QrCodeService().generateQrCode(user.id, content);
     },
     ...onAction,
     mutationKey: ["create-qr-code"],
+  });
+  return mutation;
+}
+
+export function useValidateQrCode(onAction?: ExecuteOnAction) {
+  const mutation = useMutation({
+    mutationFn: async (content: string) => {
+      return await new QrCodeService().validate(content);
+    },
+    ...onAction,
+    mutationKey: ["validate-qr-code"],
   });
   return mutation;
 }
