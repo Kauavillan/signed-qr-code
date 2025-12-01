@@ -5,6 +5,7 @@ import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
 import InputsFormContainer from "@/components/ui/inputs-form-container";
 import Logo from "@/components/ui/logo";
+import sizes from "@/constants/sizes";
 import { Colors } from "@/constants/theme";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserLoginMutation } from "@/hooks/api/users/mutations";
@@ -14,6 +15,7 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function Login() {
   const router = useRouter();
@@ -44,40 +46,46 @@ export default function Login() {
 
   return (
     <ScreenContainer includeSafeArea>
-      <InputsFormContainer>
-        <Logo size={200} />
-        <View>
-          <ThemedText
-            style={{ fontSize: 24, fontWeight: "bold", marginVertical: 16 }}
-          >
-            Login
-          </ThemedText>
+      <KeyboardAwareScrollView
+        bottomOffset={50}
+        showsVerticalScrollIndicator={false}
+      >
+        <InputsFormContainer>
+          <Logo size={150} />
+          <View>
+            <ThemedText
+              style={{ fontSize: 24, fontWeight: "bold", marginVertical: 16 }}
+            >
+              Login
+            </ThemedText>
 
-          <InputsContainer>
-            <ControlledTextInput
-              control={control}
-              name="identifier"
-              autoCapitalize="none"
-              placeholder="E-mail ou username"
-              errors={formState.errors}
-            />
-            <ControlledTextInput
-              control={control}
-              name="password"
-              placeholder="Senha"
-              type="password"
-              errors={formState.errors}
-            />
+            <InputsContainer>
+              <ControlledTextInput
+                control={control}
+                name="identifier"
+                type="email"
+                autoCapitalize="none"
+                placeholder="E-mail ou username"
+                errors={formState.errors}
+              />
+              <ControlledTextInput
+                control={control}
+                name="password"
+                placeholder="Senha"
+                type="password"
+                errors={formState.errors}
+              />
 
-            <Button
-              onPress={handleSubmit(onSubmit)}
-              text="Login"
-              isLoading={isPending}
-            />
-          </InputsContainer>
-        </View>
-      </InputsFormContainer>
-      <View>
+              <Button
+                onPress={handleSubmit(onSubmit)}
+                text="Login"
+                isLoading={isPending}
+              />
+            </InputsContainer>
+          </View>
+        </InputsFormContainer>
+      </KeyboardAwareScrollView>
+      <View style={{ paddingVertical: sizes.vh.get(5) }}>
         <ThemedText style={{ textAlign: "center", marginTop: 16 }}>
           Não tem uma conta?{" "}
           <ThemedText

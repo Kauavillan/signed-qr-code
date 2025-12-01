@@ -8,15 +8,18 @@ export function useCreateComplaintMutation(onAction?: ExecuteOnAction) {
     mutationFn: async ({
       qrCodeId,
       description,
+      userId,
     }: {
       qrCodeId: string;
       description: string | undefined;
+      userId: string | undefined | null;
     }) => {
       const deviceId = await getDeviceId();
       return await new ComplaintService().reportQrCode(
         qrCodeId,
         deviceId,
-        description
+        description,
+        userId
       );
     },
     ...onAction,

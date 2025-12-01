@@ -226,40 +226,44 @@ export default function QrCodeInfo() {
 
         {codeData && (
           <View style={{ marginVertical: 16 }}>
-            <QRCode value={codeData} size={sizes.vw.globalViewWidth * 0.8} />
+            <QRCode
+              value={codeData}
+              size={sizes.vw.globalViewWidth * 0.8}
+              backgroundColor={Colors.background}
+            />
           </View>
         )}
         {(!shouldValidateCode.isPending &&
           !shouldValidateCode.shouldValidate) ||
-          (data?.content && (
-            <CustomPressable
-              onPress={handleQrCodeContentPress}
-              style={{
-                borderWidth: 1,
-                borderColor: Colors.primary,
-                borderRadius: 8,
-                padding: 12,
-                marginTop: 20,
-                width: "100%",
-              }}
-            >
-              <View style={{ alignItems: "center", gap: 8 }}>
-                <ThemedText
-                  style={{
-                    color: Colors.primary,
-                    fontWeight: "bold",
-                    fontSize: 18,
-                  }}
-                >
-                  Conteúdo
-                </ThemedText>
-                <ThemedText>{data?.content ?? codeData}</ThemedText>
-                <ThemedText style={{ fontSize: 12, color: Colors.secondary }}>
-                  Clique aqui para ser redirecionado para o conteúdo
-                </ThemedText>
-              </View>
-            </CustomPressable>
-          ))}
+        data?.content ? (
+          <CustomPressable
+            onPress={handleQrCodeContentPress}
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.primary,
+              borderRadius: 8,
+              padding: 12,
+              marginTop: 20,
+              width: "100%",
+            }}
+          >
+            <View style={{ alignItems: "center", gap: 8 }}>
+              <ThemedText
+                style={{
+                  color: Colors.primary,
+                  fontWeight: "bold",
+                  fontSize: 18,
+                }}
+              >
+                Conteúdo
+              </ThemedText>
+              <ThemedText>{data?.content ?? codeData}</ThemedText>
+              <ThemedText style={{ fontSize: 12, color: Colors.secondary }}>
+                Clique aqui para ser redirecionado para o conteúdo
+              </ThemedText>
+            </View>
+          </CustomPressable>
+        ) : null}
         {data?.username && <ThemedText>Emissor: {data.username}</ThemedText>}
         {data?.createdAt && (
           <ThemedText>

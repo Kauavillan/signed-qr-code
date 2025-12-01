@@ -13,7 +13,7 @@ import {
   useCameraPermissions,
 } from "expo-camera";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { AppState, Linking, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -23,6 +23,7 @@ export default function Index() {
   const [permission, requestPermission] = useCameraPermissions();
   const [foregroundPermission, setForegroundPermission] =
     React.useState(permission);
+  const [torchOn, setTorchOn] = useState(false);
   const [scannedData, setScannedData] = React.useState<string | null>(null);
 
   // Sincroniza estado local quando hook mudar
@@ -54,12 +55,15 @@ export default function Index() {
         }
       }
     });
-    return () => subscription.remove();
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   // Revalida permissão sempre que a tela ganhar foco (ex: navegação de volta)
   useFocusEffect(
     React.useCallback(() => {
+      setScannedData(null);
       let active = true;
       (async () => {
         try {
@@ -87,6 +91,7 @@ export default function Index() {
       pathname: "/qr-code-info",
       params: { codeData: result.data },
     });
+    setTorchOn(false);
   }
 
   // Enquanto o status da permissão é carregado
@@ -142,10 +147,11 @@ export default function Index() {
       </View>
     );
   }
-
+  console.log("Foreground permission: ", foregroundPermission);
   return (
     <>
       <CameraView
+        enableTorch={torchOn}
         key={
           foregroundPermission?.granted ? "camera-granted" : "camera-pending"
         }
@@ -184,6 +190,39 @@ export default function Index() {
           <Corner position="bottomRight" />
         </View>
       </View>
+      <View style={styles.refreshButtonContainer}>
+        <CustomPressable
+          onPress={async () => {
+            try {
+              const updated = await Camera.getCameraPermissionsAsync();
+              setForegroundPermission(updated);
+            } catch (e) {
+              console.warn("Falha ao recarregar permissão", e);
+            }
+          }}
+          style={styles.roundButton}
+        >
+          <Icon provider="Ionicons" name="refresh" color="white" size={18} />
+        </CustomPressable>
+      </View>
+      <View style={styles.lanternButtonContainer}>
+        <CustomPressable
+          onPress={() => setTorchOn(!torchOn)}
+          style={[
+            styles.roundButton,
+            {
+              backgroundColor: torchOn ? Colors.primary : Colors.grey,
+            },
+          ]}
+        >
+          <Icon
+            provider="MaterialIcons"
+            name={torchOn ? "flashlight-off" : "flashlight-on"}
+            color="white"
+            size={18}
+          />
+        </CustomPressable>
+      </View>
     </>
   );
 }
@@ -216,6 +255,18 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     opacity: 0.8,
   },
+  roundButton: {
+    backgroundColor: Colors.primary,
+    padding: 8,
+    borderRadius: 50,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  refreshButtonContainer: { position: "absolute", bottom: 40, right: 20 },
+  lanternButtonContainer: { position: "absolute", bottom: 100, right: 20 },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",

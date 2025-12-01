@@ -17,7 +17,6 @@ export async function getLogoAsBase64(): Promise<string | undefined> {
     await asset.downloadAsync();
     if (!asset.localUri) return undefined;
     const base64 = await new FileSystem.File(asset.localUri).base64();
-    console.log("Base64 logo length:", base64);
     return `data:image/png;base64,${base64}`;
   } catch (error) {
     console.error("Error loading logo:", error);
@@ -30,7 +29,7 @@ export function buildQrPdfHtml(
   qrDataUrl: string,
   logoDataUrl?: string
 ): string {
-  const createdAt = new Date(item.createdAt).toLocaleString();
+  const createdAt = new Date(item.createdAt).toLocaleString("pt-BR");
   return `<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -49,7 +48,7 @@ export function buildQrPdfHtml(
       .qr img { width: 300px; height: 300px; object-fit: contain; }
       .title { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
       .meta { font-size: 12px; color: #444; margin: 0 0 16px; }
-      .section { width: 100%; max-width: 640px; text-align: left; }
+      .section { width: 100%; max-width: 640px; text-align: center; }
       .row { margin: 6px 0; }
       .label { font-weight: 600; }
       .value { word-break: break-word; }
@@ -63,7 +62,7 @@ export function buildQrPdfHtml(
           ? `<div class="logo">
         <img src="${logoDataUrl}" alt="Logo QRypt" />
       </div>
-      <div class="app-name">Gerado pelo <strong>QRypt</strong></div>`
+      <div class="app-name">Gerado por <strong>QRypt</strong></div>`
           : ""
       }
       <div class="title">${escapeHtml(item.username)}</div>

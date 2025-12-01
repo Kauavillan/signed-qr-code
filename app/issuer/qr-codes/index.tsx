@@ -1,6 +1,7 @@
 import Button from "@/components/button";
 import { ThemedText } from "@/components/themed-text";
 import sizes from "@/constants/sizes";
+import { Colors } from "@/constants/theme";
 import { useAuth } from "@/contexts/AuthContext";
 import type { QrCodeItem } from "@/hooks/api/qr-codes/queries";
 import { useInfiniteUserQrCodes } from "@/hooks/api/qr-codes/queries";
@@ -137,6 +138,7 @@ export default function QrCodesList() {
               getRef={(c) => {
                 qrRefs.current[item.id] = c;
               }}
+              backgroundColor={Colors.background}
             />
           </View>
           <ThemedText style={{ fontWeight: "bold" }}>{item.content}</ThemedText>

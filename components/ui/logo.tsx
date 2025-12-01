@@ -9,6 +9,7 @@ export default function Logo({ size = 300, style, ...rest }: Props) {
       source={require("@assets/images/logo.png")}
       style={[{ width: size, height: size, alignSelf: "center" }, style]}
       resizeMode="contain"
+      {...rest}
     />
   );
 }

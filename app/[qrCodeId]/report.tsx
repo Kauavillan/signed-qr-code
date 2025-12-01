@@ -4,19 +4,23 @@ import ErrorBanner from "@/components/error-banner";
 import ScreenContainer from "@/components/screen-container";
 import { ThemedText } from "@/components/themed-text";
 import InputsContainer from "@/components/ui/inputs-container";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCreateComplaintMutation } from "@/hooks/api/complaints/mutations";
 import {
   ComplaintReportFormData,
   complaintReportSchema,
 } from "@/schemas/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function ReportQrCodePage() {
+  const { userId } = useAuth();
   const { qrCodeId }: { qrCodeId: string } = useLocalSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { control, handleSubmit, formState } = useForm<ComplaintReportFormData>(
     {
       resolver: zodResolver(complaintReportSchema),
@@ -24,7 +28,10 @@ export default function ReportQrCodePage() {
     }
   );
   const { mutateAsync, isPending, error } = useCreateComplaintMutation({
-    onSuccess: () => router.push(`/${qrCodeId}/report-completed`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["can-complaint", qrCodeId] });
+      router.replace(`/${qrCodeId}/report-completed`);
+    },
   });
   const [submittedValue, setSubmittedValue] = useState<string | undefined>(
     undefined
@@ -34,6 +41,7 @@ export default function ReportQrCodePage() {
     mutateAsync({
       qrCodeId,
       description: data.details,
+      userId,
     });
     setSubmittedValue(data.details);
   }
@@ -58,11 +66,6 @@ export default function ReportQrCodePage() {
           isLoading={isPending}
         />
       </InputsContainer>
-      {submittedValue !== undefined && (
-        <ThemedText style={{ marginTop: 12 }}>
-          Descrição enviada: {submittedValue}
-        </ThemedText>
-      )}
     </ScreenContainer>
   );
 }

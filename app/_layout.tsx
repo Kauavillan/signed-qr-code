@@ -12,8 +12,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import "react-native-reanimated";
-
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
@@ -64,19 +64,24 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Stack screenOptions={defaultHeaderOptions}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="issuer" options={{ headerShown: false }} />
-          <Stack.Screen name="qr-codes" options={{ headerTitle: "QR Codes" }} />
-          <Stack.Screen name="[qrCodeId]" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="qr-code-info"
-            options={{ headerTitle: "Informações do QR Code" }}
-          />
-        </Stack>
-      </AuthProvider>
+      <KeyboardProvider>
+        <AuthProvider>
+          <Stack screenOptions={defaultHeaderOptions}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="issuer" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="qr-codes"
+              options={{ headerTitle: "QR Codes" }}
+            />
+            <Stack.Screen name="[qrCodeId]" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="qr-code-info"
+              options={{ headerTitle: "Informações do QR Code" }}
+            />
+          </Stack>
+        </AuthProvider>
+      </KeyboardProvider>
     </QueryClientProvider>
   );
 }

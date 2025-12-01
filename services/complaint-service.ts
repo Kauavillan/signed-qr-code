@@ -4,12 +4,18 @@ import QueryHandler from "./query-handler";
 export default class ComplaintService {
   private endpoint = "complaints";
 
-  async reportQrCode(qrCodeId: string, deviceId: string, description?: string) {
+  async reportQrCode(
+    qrCodeId: string,
+    deviceId: string,
+    description?: string,
+    userId?: string | null
+  ) {
     return await QueryHandler(
       api.post(`${this.endpoint}`, {
         description,
         deviceId,
         qrCodeId,
+        userId,
       })
     );
   }
