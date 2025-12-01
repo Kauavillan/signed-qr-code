@@ -51,6 +51,12 @@
         "projectId": "35d9ae2b-3dc2-4dda-b6d7-7f1c88723bdb"
       }
     },
-    "owner": "kauavns"
+    "owner": "kauavns",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/35d9ae2b-3dc2-4dda-b6d7-7f1c88723bdb"
+    }
   }
 }

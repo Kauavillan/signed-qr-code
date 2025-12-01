@@ -1,5 +1,6 @@
 import { defaultHeaderOptions } from "@/constants/navigation";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { UpdateProvider } from "@/contexts/UpdateContext";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import {
   Inter_400Regular,
@@ -65,22 +66,27 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <KeyboardProvider>
-        <AuthProvider>
-          <Stack screenOptions={defaultHeaderOptions}>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="issuer" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="qr-codes"
-              options={{ headerTitle: "QR Codes" }}
-            />
-            <Stack.Screen name="[qrCodeId]" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="qr-code-info"
-              options={{ headerTitle: "Informações do QR Code" }}
-            />
-          </Stack>
-        </AuthProvider>
+        <UpdateProvider>
+          <AuthProvider>
+            <Stack screenOptions={defaultHeaderOptions}>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="issuer" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="qr-codes"
+                options={{ headerTitle: "QR Codes" }}
+              />
+              <Stack.Screen
+                name="[qrCodeId]"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="qr-code-info"
+                options={{ headerTitle: "Informações do QR Code" }}
+              />
+            </Stack>
+          </AuthProvider>
+        </UpdateProvider>
       </KeyboardProvider>
     </QueryClientProvider>
   );

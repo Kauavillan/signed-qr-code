@@ -16,9 +16,9 @@ const baseURL =
 
 const api = Axios.create({
   baseURL,
-  // headers: {
-  //   Authorization: `Bearer ${token}`,
-  // },
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
 });
 let canRedirectToLogin = true;
 
