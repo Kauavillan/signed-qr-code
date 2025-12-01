@@ -12,7 +12,7 @@ import { router } from "expo-router";
 let token = getBearerToken();
 dayjs.extend(utc);
 const baseURL =
-  process.env.EXPO_PUBLIC_BACKEND_URL || "http://10.0.2.2:3000/api";
+  process.env.EXPO_PUBLIC_BACKEND_URL || "http://bsi.cefet-rj.br:3010/api";
 
 const api = Axios.create({
   baseURL,
