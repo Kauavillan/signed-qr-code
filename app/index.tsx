@@ -25,22 +25,25 @@ export default function Index() {
     React.useState(permission);
   const [torchOn, setTorchOn] = useState(false);
   const [scannedData, setScannedData] = React.useState<string | null>(null);
+  const [hasAskedPermission, setHasAskedPermission] = useState(false);
 
   // Sincroniza estado local quando hook mudar
   React.useEffect(() => {
     setForegroundPermission(permission);
   }, [permission]);
 
-  // Solicita permissão inicial se possível
+  // Solicita permissão inicial com modal se possível
   React.useEffect(() => {
     if (
       foregroundPermission &&
       !foregroundPermission.granted &&
-      foregroundPermission.canAskAgain
+      foregroundPermission.canAskAgain &&
+      !hasAskedPermission
     ) {
+      setHasAskedPermission(true);
       requestPermission();
     }
-  }, [foregroundPermission, requestPermission]);
+  }, [foregroundPermission, requestPermission, hasAskedPermission]);
 
   // Revalida permissão ao voltar para foreground
   React.useEffect(() => {
@@ -70,9 +73,6 @@ export default function Index() {
           const updated = await Camera.getCameraPermissionsAsync();
           if (active) {
             setForegroundPermission(updated);
-            if (updated && !updated.granted && updated.canAskAgain) {
-              requestPermission();
-            }
           }
         } catch (e) {
           console.warn("Falha ao atualizar permissão (focus)", e);
@@ -81,7 +81,7 @@ export default function Index() {
       return () => {
         active = false;
       };
-    }, [requestPermission])
+    }, [])
   );
 
   function handleQrCode(result: BarcodeScanningResult) {
