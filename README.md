@@ -3,7 +3,7 @@
 Aplicativo mobile para gerar e validar códigos QR assinados digitalmente, garantindo autenticidade e segurança.
 
 ## ⬇️ Como baixar
-O apk do aplicativo (sua versão standalone está disponível apenas para Android) se encontra neste mesmo repositório, na aba de Releases (Versões). Clique em QRypt + versão do aplicativo (ex.: QRypt v1.0.0) e então clique em QRypt.apk e o download deve ser iniciado.
+O apk do aplicativo (sua versão standalone está disponível apenas para Android) se encontra neste mesmo repositório, na aba de Releases (Versões). Clique em QRypt + versão do aplicativo (ex.: QRypt v1.0.0) e então clique em QRypt.apk. O download deve ser iniciado logo em seguida.
 
 Também é possível acessar os releases nas tags. Selecione tags > QRypt > QRypt + versão do aplicativo > QRypt.apk
 
